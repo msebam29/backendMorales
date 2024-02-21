@@ -1,5 +1,5 @@
 const fs = require("fs")
-const path = require("path")
+
 class ProductManager {
     constructor(rutaAlArchivo) {
         this.path = rutaAlArchivo
@@ -93,21 +93,5 @@ class ProductManager {
     }
 
 }
-let pm = new ProductManager(path.join(__dirname, "products.json"))
 
-const app=async()=>{
-    let products= await pm.getProducts()
-    console.log(products)
-    await pm.addProduct("producto prueba", "Este es un producto prueba", 200, "Sin imagen", "abc123", 25)
-    await pm.addProduct("segundo producto prueba", "Este es otro producto prueba", 100, "Sin imagen", "abc456", 14)
-    await pm.addProduct("tercer producto prueba", "Este es otro producto prueba", 20, "Sin imagen", "abc789", 20)
-    await pm.addProduct("cuarto producto prueba", "Este es otro producto prueba", 300, "Sin imagen", "abc012", 10)
-    await pm.addProduct("quinto producto prueba", "Este es otro producto prueba", 40, "Sin imagen", "abc345", 250)
-    await pm.addProduct("sexto producto prueba", "Este es otro producto prueba", 250, "Sin imagen", "abc678", 22)
-    await pm.addProduct("septimo producto prueba", "Este es otro producto prueba", 700, "Sin imagen", "abc901", 140)
-    await pm.addProduct("octavo producto prueba", "Este es otro producto prueba", 150, "Sin imagen", "abc234", 32)
-    await pm.addProduct("noveno producto prueba", "Este es otro producto prueba", 400, "Sin imagen", "abc567", 84)
-    await pm.addProduct("decimo producto prueba", "Este es otro producto prueba", 80, "Sin imagen", "abc890", 65)    
-}
-app()
 module.exports= ProductManager
