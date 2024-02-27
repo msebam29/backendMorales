@@ -11,7 +11,7 @@ class ProductManager {
             return []
         }
     }
-    async addProduct(title, description, price, thumbnail, code, stock) {
+    async addProduct({title, description, price, thumbnail, code, stock}) {
         let products = await this.getProducts()
         
         let existe = products.find(product => product.code === code)
@@ -48,6 +48,7 @@ class ProductManager {
 
         products.push(newProduct)
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, 5))
+        return newProduct
     }
 
     async getProductById(id) {
@@ -81,15 +82,18 @@ class ProductManager {
             id:id
         }         
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, 5))
+        return products[indiceProduct]
     }
 
     async deleteProduct(id) {
         let products = await this.getProducts()
         let indiceProduct = products.findIndex(product => product.id === id)
+        let productEliminado = products[indiceProduct]
 
         products.splice(indiceProduct, 1) 
         
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, 5))
+        return productEliminado
     }
 
 }

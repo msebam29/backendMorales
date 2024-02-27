@@ -4,3 +4,4 @@ const router=Router()
 
 const cm=new CartManager("../data/cart.json")
 
+module.exports=router

@@ -4,6 +4,6 @@ class CartManager {
     constructor(rutaAlArchivo){
         this.path=rutaAlArchivo
     }
-
-    async
 }
+
+module.exports=CartManager
