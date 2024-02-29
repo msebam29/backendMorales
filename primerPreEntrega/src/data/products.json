@@ -4,89 +4,129 @@
           "title": "producto prueba",
           "description": "Este es un producto prueba",
           "price": 200,
-          "thumbnail": "Sin imagen",
+          "category": "deporte",
+          "thumbnails": [
+               "Sin imagen"
+          ],
           "code": "abc123",
-          "stock": 25
+          "stock": 25,
+          "status": true
      },
      {
           "id": 2,
           "title": "segundo producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 100,
-          "thumbnail": "Sin imagen",
+          "description": "Este es un producto prueba",
+          "price": 400,
+          "category": "libros",
+          "thumbnails": [
+               "Sin imagen"
+          ],
           "code": "abc456",
-          "stock": 14
+          "stock": 5,
+          "status": true
      },
      {
           "id": 3,
           "title": "tercer producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 20,
-          "thumbnail": "Sin imagen",
+          "description": "Este es un producto prueba",
+          "price": 100,
+          "category": "ropa",
+          "thumbnails": [
+               "Sin imagen"
+          ],
           "code": "abc789",
-          "stock": 20
+          "stock": 50,
+          "status": true
      },
      {
           "id": 4,
           "title": "cuarto producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 300,
-          "thumbnail": "Sin imagen",
-          "code": "abc012",
-          "stock": 10
+          "description": "Este es un producto prueba",
+          "price": 150,
+          "category": "ropa",
+          "thumbnails": [
+               "Sin imagen"
+          ],
+          "code": "abc901",
+          "stock": 500,
+          "status": true
      },
      {
           "id": 5,
           "title": "quinto producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 40,
-          "thumbnail": "Sin imagen",
-          "code": "abc345",
-          "stock": 250
+          "description": "Este es un producto prueba",
+          "price": 800,
+          "category": "tecnologia",
+          "thumbnails": [
+               "Sin imagen"
+          ],
+          "code": "abc234",
+          "stock": 100,
+          "status": true
      },
      {
           "id": 6,
           "title": "sexto producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 250,
-          "thumbnail": "Sin imagen",
-          "code": "abc678",
-          "stock": 22
+          "description": "Este es un producto prueba",
+          "price": 400,
+          "category": "tecnologia",
+          "thumbnails": [
+               "Sin imagen"
+          ],
+          "code": "abc567",
+          "stock": 10,
+          "status": true
      },
      {
           "id": 7,
           "title": "septimo producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 700,
-          "thumbnail": "Sin imagen",
-          "code": "abc901",
-          "stock": 140
+          "description": "Este es un producto prueba",
+          "price": 200,
+          "category": "deporte",
+          "thumbnails": [
+               "Sin imagen"
+          ],
+          "code": "abc890",
+          "stock": 23,
+          "status": true
      },
      {
           "id": 8,
           "title": "octavo producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 150,
-          "thumbnail": "Sin imagen",
-          "code": "abc234",
-          "stock": 32
+          "description": "Este es un producto prueba",
+          "price": 280,
+          "category": "deporte",
+          "thumbnails": [
+               "Sin imagen"
+          ],
+          "code": "cba123",
+          "stock": 230,
+          "status": true
      },
      {
           "id": 9,
           "title": "noveno producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 400,
-          "thumbnail": "Sin imagen",
-          "code": "abc567",
-          "stock": 84
+          "description": "Este es un producto prueba",
+          "price": 520,
+          "category": "libros",
+          "thumbnails": [
+               "Sin imagen"
+          ],
+          "code": "cba456",
+          "stock": 30,
+          "status": true
      },
      {
           "id": 10,
           "title": "decimo producto prueba",
-          "description": "Este es otro producto prueba",
-          "price": 80,
-          "thumbnail": "Sin imagen",
-          "code": "abc890",
-          "stock": 65
+          "description": "Este es un producto prueba",
+          "price": 50,
+          "category": "ropa",
+          "thumbnails": [
+               "Sin imagen"
+          ],
+          "code": "cba789",
+          "stock": 300,
+          "status": true
      }
 ]

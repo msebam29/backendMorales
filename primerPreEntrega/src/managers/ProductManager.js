@@ -11,7 +11,7 @@ class ProductManager {
             return []
         }
     }
-    async addProduct({title, description, price, thumbnail, code, stock}) {
+    async addProduct({title, description, price, category, thumbnail, code, stock, status}) {
         let products = await this.getProducts()
         
         let existe = products.find(product => product.code === code)
@@ -41,9 +41,10 @@ class ProductManager {
             console.log("El stock debe ser mayor a cero")
             return
         }
+        let thumbnails = [thumbnail]
 
         let newProduct = {
-            id, title, description, price, thumbnail, code, stock
+            id, title, description, price, category, thumbnails, code, stock, status
         }
 
         products.push(newProduct)
