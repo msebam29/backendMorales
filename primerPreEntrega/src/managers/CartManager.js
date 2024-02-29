@@ -1,13 +1,13 @@
-const fs=require("fs")
-const ProductManager=require("./ProductManager")
-const {join}=require ("path")
+const fs = require("fs")
+const ProductManager = require("./ProductManager")
+const { join } = require("path")
 
-let rutaProducts= join(__dirname, "..", "data", "products.json")
-const pm=new ProductManager(rutaProducts)
+let rutaProducts = join(__dirname, "..", "data", "products.json")
+const pm = new ProductManager(rutaProducts)
 
 class CartManager {
-    constructor(rutaAlArchivo){
-        this.path=rutaAlArchivo
+    constructor(rutaAlArchivo) {
+        this.path = rutaAlArchivo
     }
     async getCarts() {
         if (fs.existsSync(this.path)) {
@@ -16,17 +16,17 @@ class CartManager {
             return []
         }
     }
-    async createCart(){
+    async createCart() {
         let carts = await this.getCarts()
         let id = 1
         if (carts.length > 0) {
             id = carts[carts.length - 1].id + 1
         }
-        let products= []
-        let cart = {id, products}
+        let products = []
+        let cart = { id, products }
         carts.push(cart)
         await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 5))
-        return 
+        return
     }
     async getCartById(id) {
         let carts = await this.getCarts()
@@ -38,30 +38,40 @@ class CartManager {
         return cart
     }
 
-    async addProduct (cid, id) {
+    async addProduct(cid, id) {
         let carts = await this.getCarts()
         let cart = await this.getCartById(cid)
-        let products = cart.products
+
         let product = await pm.getProductById(id)
-        let pid=product.id
-        let existe = await products.find(product => product.id === id)
-        console.log(existe);
-        if(!existe){
-            let quantity=1
-            products.push({pid, quantity})
-        }else{
-            let quantity= existe.quantity + 1
-            products.push({pid, quantity})
+        if (!product) {
+            return
         }
-        cart ={
-            ...cart,
+        let pid = product.id
+
+
+        let products = cart.products
+        let indiceCart = carts.findIndex(cart => cart.id === cid)
+        if (indiceCart == -1) {
+            console.log("Carrito inexistente")
+            return
+        }
+        const existProduct = await products.find(product => product.id === pid)
+        if (existProduct) {
+            existProduct.quantity++
+        } else {
+            products.push({
+                id: id,
+                quantity: 1
+            })
+        }
+
+        carts[indiceCart] = {
+            ...carts[indiceCart],
             products
         }
-        console.log(cart)
-        carts.push(cart)
-        console.log(carts);
-        await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 5)) 
-    } 
+        await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 5))
+        return cart
+    }
 }
 
-module.exports=CartManager
+module.exports = CartManager
