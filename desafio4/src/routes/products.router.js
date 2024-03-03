@@ -1,10 +1,9 @@
-const { log } = require("console")
 const ProductManager=require("../managers/ProductManager")
 const {join}=require("path")
 const Router=require("express").Router
 const router=Router()
 
-let rutaProducts= join(__dirname, "..", "data", "products.json")
+const rutaProducts= join(__dirname, "..", "data", "products.json")
 const pm = new ProductManager(rutaProducts)
 
 router.get("/", async (req, res) => {

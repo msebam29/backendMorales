@@ -8,7 +8,6 @@ const viewsRouter=require("./routes/views.router")
 
 const PORT = 8080
 let io
-
 const app = express()
 
 app.engine("handlebars", engine())
@@ -19,6 +18,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 app.use(express.static(path.join(__dirname, "/public")))
+
 app.use("/", viewsRouter)
 app.use("/api/products", (req,res, next)=>{
     req.io = io
@@ -29,13 +29,14 @@ app.use("/api/cart", (req,res, next)=>{
     next()
 }, cartRouter)
 
-app.get("/", (req, res)=>{
+/* app.get("/", (req, res)=>{
     res.setHeader("Content-Type", "text/plain")
     res.status(200).send("OK")
-})
+}) */
 
 app.get("*", (req, res) => {
-    res.send("Error 404 - Not Found")
+    res.setHeader("Content-Type", "text/plain")
+    res.send("Error 404 - Page Not Found")
 })
 
 const server= app.listen(PORT, () => {
@@ -43,4 +44,3 @@ const server= app.listen(PORT, () => {
 })
 
 io= new Server(server)
-
