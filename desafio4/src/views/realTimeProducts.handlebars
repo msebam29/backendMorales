@@ -1,0 +1,20 @@
+<h2>Productos</h2>
+<hr>
+<h3>Ingrese nuevo producto</h3>
+<form id="form">
+    <input name="title" placeholder="Title" required />
+    <input name="description" placeholder="Description" required />
+    <input name="price" placeholder="Price" required />
+    <input name="category" placeholder="Category" required />
+    <input name="thumbnails" placeholder="Thumbnails" required />
+    <input name="code" placeholder="Code" required />    
+    <input name="stock" placeholder="Stock" required />
+    <button type="submit">
+</form>
+
+<div id="products"></div>
+<hr>
+<a href="/">Home Page</a>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

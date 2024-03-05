@@ -5,8 +5,11 @@ const {Server} = require("socket.io")
 const productsRouter= require ("./routes/products.router")
 const cartRouter=require("./routes/carts.router")
 const viewsRouter=require("./routes/views.router")
+const ProductManager = require("./managers/ProductManager")
 
 const PORT = 8080
+const rutaProducts = path.join(__dirname, "/desafio4", "/src", "/data", "/products.json")
+const pm = new ProductManager(rutaProducts)
 let io
 const app = express()
 
@@ -29,11 +32,6 @@ app.use("/api/cart", (req,res, next)=>{
     next()
 }, cartRouter)
 
-/* app.get("/", (req, res)=>{
-    res.setHeader("Content-Type", "text/plain")
-    res.status(200).send("OK")
-}) */
-
 app.get("*", (req, res) => {
     res.setHeader("Content-Type", "text/plain")
     res.send("Error 404 - Page Not Found")
@@ -44,3 +42,26 @@ const server= app.listen(PORT, () => {
 })
 
 io= new Server(server)
+
+io.on("connection", async (socket)=>{
+    console.log('Se conecto un cliente con id ${socket.id}')
+    let products=await pm.getProducts()
+    socket.emit("Products", products)
+    
+    socket.on("newProduct",async (newProduct)=>{
+        await pm.addProduct(newProduct)
+        let products=await pm.getProducts()
+        socket.emit("newProducts", products)
+    })
+    
+    socket.on("deleteProduct", async (deleteProduct)=>{
+        await pm.deleteProduct(deleteProduct)
+        let products=await pm.getProducts()
+        socket.emit("newProducts", products)
+    })
+
+    socket.on("disconnect", ()=>{
+        console.log('Se desconecto un cliente con id ${socket.id}');
+    })
+})
+
