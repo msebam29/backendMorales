@@ -45,8 +45,6 @@ const server = app.listen(PORT, () => {
 io = new Server(server)
 
 io.on("connection", socket => {
-    socket.on("suprimirProduct", async productId => {
-        await pm.deleteProduct(productId)
-    })
+    console.log(`Cliente conectado con id ${socket.id}`);
 })
 
