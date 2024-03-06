@@ -34,6 +34,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res)=>{
     let newProduct = await pm.addProduct(req.body)
+    req.io.emit ("newProduct", newProduct)
     res.status(201).json(newProduct)
 })
 
@@ -52,6 +53,7 @@ router.delete("/:id", async (req, res)=>{
         return res.status(400).json({error:"El id debe ser numérico"})
     }
     let productoEliminado = await pm.deleteProduct(id)
+    req.io.emit("deleteProduct", productoEliminado)
     return res.status(200).json({productoEliminado})
 })
 

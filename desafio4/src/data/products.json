@@ -128,5 +128,31 @@
           "code": "cba789",
           "stock": 300,
           "status": true
+     },
+     {
+          "id": 11,
+          "title": "nov producto prueba",
+          "description": "Este es un producto prueba",
+          "price": 5200,
+          "category": "libros",
+          "thumbnails": [
+               null
+          ],
+          "code": "ksl456",
+          "stock": 30,
+          "status": true
+     },
+     {
+          "id": 12,
+          "title": "doceavo producto prueba",
+          "description": "Este es un producto prueba",
+          "price": 51,
+          "category": "ropa",
+          "thumbnails": [
+               null
+          ],
+          "code": "kfe456",
+          "stock": 300,
+          "status": true
      }
 ]

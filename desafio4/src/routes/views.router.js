@@ -13,8 +13,11 @@ router.get('/',async (req,res)=>{
     })
 })
 
-router.get('/realTimeProducts',(req,res)=>{
-    res.status(200).render("realTimeproducts")
+router.get('/realTimeProducts',async (req,res)=>{
+    let products = await pm.getProducts()
+    res.status(200).render("realTimeProducts", { 
+        products
+    })
 })
 
 

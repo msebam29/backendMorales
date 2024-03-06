@@ -1,18 +1,22 @@
 <h2>Productos</h2>
 <hr>
-<h3>Ingrese nuevo producto</h3>
-<form id="form">
-    <input name="title" placeholder="Title" required />
-    <input name="description" placeholder="Description" required />
-    <input name="price" placeholder="Price" required />
-    <input name="category" placeholder="Category" required />
-    <input name="thumbnails" placeholder="Thumbnails" required />
-    <input name="code" placeholder="Code" required />    
-    <input name="stock" placeholder="Stock" required />
-    <button type="submit">
-</form>
 
-<div id="products"></div>
+<ul id="products">
+    {{#each products}}
+        <li class="itemProduct" data-id={{id}}> 
+        <img src={{thumbnails}} alt='Image of {{title}}' />
+        <div>
+          <p>{{title}}</p>
+          <p>{{category}}</p>
+          <p>{{description}}</p>
+          <p>Price: {{price}}</p>
+        </div>
+        <div>
+          <button class="suprimir">Delete</button>
+        </div>
+      </li>
+    {{/each}}
+</ul>
 <hr>
 <a href="/">Home Page</a>
 

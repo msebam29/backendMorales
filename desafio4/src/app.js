@@ -1,10 +1,10 @@
 const express = require("express")
-const path= require("path")
+const path = require("path")
 const engine = require("express-handlebars").engine
-const {Server} = require("socket.io")
-const productsRouter= require ("./routes/products.router")
-const cartRouter=require("./routes/carts.router")
-const viewsRouter=require("./routes/views.router")
+const { Server } = require("socket.io")
+const productsRouter = require("./routes/products.router")
+const cartRouter = require("./routes/carts.router")
+const viewsRouter = require("./routes/views.router")
 const ProductManager = require("./managers/ProductManager")
 
 const PORT = 8080
@@ -18,50 +18,41 @@ app.set("view engine", "handlebars")
 app.set("views", path.join(__dirname, "/views"))
 
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 
 app.use(express.static(path.join(__dirname, "/public")))
 
 app.use("/", viewsRouter)
-app.use("/api/products", (req,res, next)=>{
+app.use("/api/products", (req, res, next) => {
     req.io = io
     next()
 }, productsRouter)
-app.use("/api/cart", (req,res, next)=>{
+app.use("/api/cart", (req, res, next) => {
     req.io = io
     next()
 }, cartRouter)
 
 app.get("*", (req, res) => {
     res.setHeader("Content-Type", "text/plain")
-    res.send("Error 404 - Page Not Found")
+    res.status(404).send("Error 404 - Page Not Found")
 })
 
-const server= app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server ON LINE en puerto ${PORT}`)
 })
 
-io= new Server(server)
+io = new Server(server)
 
-io.on("connection", async (socket)=>{
-    console.log('Se conecto un cliente con id ${socket.id}')
-    let products=await pm.getProducts()
-    socket.emit("Products", products)
+io.on("connection", socket => {
+    console.log('usuario conectado');
     
-    socket.on("newProduct",async (newProduct)=>{
-        await pm.addProduct(newProduct)
-        let products=await pm.getProducts()
-        socket.emit("newProducts", products)
-    })
-    
-    socket.on("deleteProduct", async (deleteProduct)=>{
-        await pm.deleteProduct(deleteProduct)
-        let products=await pm.getProducts()
-        socket.emit("newProducts", products)
-    })
-
-    socket.on("disconnect", ()=>{
-        console.log('Se desconecto un cliente con id ${socket.id}');
+    socket.on("suprimirProduct", async productId => {
+        console.log(productId);
+        
+        /* await pm.deleteProduct(productId)
+        let products = await pm.getProducts()
+        console.log(products);
+        socket.emit("products", products) */
     })
 })
 
