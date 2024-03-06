@@ -9,11 +9,11 @@ const pm = new ProductManager(rutaProducts)
 router.get("/", async (req, res) => {
     try {
         let limit = req.query.limit
-        let resultado = await pm.getProducts()
+        let products = await pm.getProducts()
         if (limit && limit > 0) {
-            resultado = resultado.slice(0, limit)
+            products = products.slice(0, limit)
         }
-        res.status(200).json(resultado)
+        res.status(200).json(products)
     } catch (error) {
         res.status(500).json({ error: "Error al obtener productos" })
     }
@@ -34,7 +34,8 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res)=>{
     let newProduct = await pm.addProduct(req.body)
-    req.io.emit ("newProduct", newProduct)
+    let products = await pm.getProducts()
+    req.io.emit ("updateProducts", products)
     res.status(201).json(newProduct)
 })
 
@@ -44,6 +45,8 @@ router.put("/:id", async (req, res)=>{
         return res.status(400).json({error:"El id debe ser numérico"})
     }
     let productModificado = await pm.updateProduct(id, req.body)
+    let products = await pm.getProducts()
+    req.io.emit ("updateProducts", products)
     res.status(201).json({productModificado})
 })
 
@@ -53,7 +56,8 @@ router.delete("/:id", async (req, res)=>{
         return res.status(400).json({error:"El id debe ser numérico"})
     }
     let productoEliminado = await pm.deleteProduct(id)
-    req.io.emit("deleteProduct", productoEliminado)
+    let products=await pm.getProducts()
+    req.io.emit("updateProducts", products)
     return res.status(200).json({productoEliminado})
 })
 

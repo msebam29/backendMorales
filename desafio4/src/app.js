@@ -10,6 +10,7 @@ const ProductManager = require("./managers/ProductManager")
 const PORT = 8080
 const rutaProducts = path.join(__dirname, "/desafio4", "/src", "/data", "/products.json")
 const pm = new ProductManager(rutaProducts)
+
 let io
 const app = express()
 
@@ -44,15 +45,8 @@ const server = app.listen(PORT, () => {
 io = new Server(server)
 
 io.on("connection", socket => {
-    console.log('usuario conectado');
-    
     socket.on("suprimirProduct", async productId => {
-        console.log(productId);
-        
-        /* await pm.deleteProduct(productId)
-        let products = await pm.getProducts()
-        console.log(products);
-        socket.emit("products", products) */
+        await pm.deleteProduct(productId)
     })
 })
 
