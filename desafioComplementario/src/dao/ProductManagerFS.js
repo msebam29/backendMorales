@@ -1,6 +1,6 @@
 const fs = require("fs")
 
-class ProductManager {
+class ProductManagerFS {
     constructor(rutaAlArchivo) {
         this.path = rutaAlArchivo
     }
@@ -99,4 +99,4 @@ class ProductManager {
 
 }
 
-module.exports= ProductManager
+module.exports= ProductManagerFS

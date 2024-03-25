@@ -1,11 +1,11 @@
 const fs = require("fs")
-const ProductManager = require("./ProductManager")
+const ProductManager = require("./ProductManagerFS")
 const { join } = require("path")
 
 let rutaProducts = join(__dirname, "..", "data", "products.json")
 const pm = new ProductManager(rutaProducts)
 
-class CartManager {
+class CartManagerFS {
     constructor(rutaAlArchivo) {
         this.path = rutaAlArchivo
     }
@@ -74,4 +74,4 @@ class CartManager {
     }
 }
 
-module.exports = CartManager
+module.exports = CartManagerFS

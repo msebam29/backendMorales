@@ -5,7 +5,8 @@ const { Server } = require("socket.io")
 const productsRouter = require("./routes/products.router")
 const cartRouter = require("./routes/carts.router")
 const viewsRouter = require("./routes/views.router")
-const ProductManager = require("./managers/ProductManager")
+const ProductManager = require("./dao/ProductManagerFS")
+const { default: mongoose } = require("mongoose")
 
 const PORT = 8080
 const rutaProducts = path.join(__dirname, "/desafio4", "/src", "/data", "/products.json")
@@ -48,3 +49,13 @@ io.on("connection", socket => {
     console.log(`Cliente conectado con id ${socket.id}`);
 })
 
+const connect = async ()=>{
+    try {
+        await mongoose.connect("mongodb+srv://msebam29:codercoder@cluster0.vwoagpr.mongodb.net/?retryWrites=true&w=majority")
+        console.log('DB conectada');
+    } catch (error) {
+        console.log("Error en la conexión a DB. Detalle", error.message);
+        
+    }
+}
+connect()

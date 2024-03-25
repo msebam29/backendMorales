@@ -1,7 +1,7 @@
 const Router=require('express').Router
 const {join} = require("path")
 const router=Router()
-const ProductManager=require("../managers/ProductManager")
+const ProductManager=require("../dao/ProductManagerFS")
 
 const rutaProducts= join(__dirname, "..", "data", "products.json")
 const pm = new ProductManager(rutaProducts)
