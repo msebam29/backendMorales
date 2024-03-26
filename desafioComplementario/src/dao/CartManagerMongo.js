@@ -6,8 +6,8 @@ class CartManagerMongo {
     async getCarts() {
         return await modelCarts.find().lean()
     }
-    
-    async getCartById(id) {
+
+    async getCartById(id){
         return await modelCarts.findById(id).lean()
     }
 
@@ -15,13 +15,13 @@ class CartManagerMongo {
         return await modelCarts.create(cart)
     }
 
-    async updateCart(id, contenido) {
+    async updateCart(id, contenido={}) {
         return await modelCarts.updateOne({_id:id}, contenido)
     }
 
-    async deleteCart (id){
-        return await modelCarts.deleteOne(id)
-    }
+    async deleteCart(id){
+        return await modelCarts.deleteOne({_id:id})
+    }    
 }
 
 module.exports=CartManagerMongo
