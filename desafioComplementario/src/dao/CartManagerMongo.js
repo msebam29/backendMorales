@@ -7,20 +7,20 @@ class CartManagerMongo {
         return await modelCarts.find().lean()
     }
 
-    async getCartById(id){
-        return await modelCarts.findById(id).lean()
+    async getCartById(cid){
+        return await modelCarts.findById(cid).lean()
     }
 
-    async createCart(cart) {
-        return await modelCarts.create(cart)
+    async createCart(cid, product={}) {
+        return await modelCarts.create(cid, product)
     }
 
-    async updateCart(id, contenido={}) {
-        return await modelCarts.updateOne({_id:id}, contenido)
+    async updateCart(cid, contenido={}) {
+        return await modelCarts.updateOne(cid, contenido)
     }
 
-    async deleteCart(id){
-        return await modelCarts.deleteOne({_id:id})
+    async deleteCart(cid){
+        return await modelCarts.deleteOne(cid)
     }    
 }
 

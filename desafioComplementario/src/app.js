@@ -10,6 +10,8 @@ const { default: mongoose } = require("mongoose")
 const PORT = 8080
 
 let io
+let usuarios = []
+let mensajes = []
 const app = express()
 
 app.engine("handlebars", engine())
@@ -26,6 +28,7 @@ app.use("/api/products", (req, res, next) => {
     req.io = io
     next()
 }, productsRouter)
+
 /* app.use("/api/carts", (req, res, next) => {
     req.io = io
     next()
@@ -42,9 +45,28 @@ const server = app.listen(PORT, () => {
 
 io = new Server(server)
 
-io.on("connection", socket => {
-    console.log(`Cliente conectado con id ${socket.id}`);
-})
+io.on("connection", socket=>{
+    console.log(`Se conecto un cliente con id ${socket.id}`)
+    
+    socket.on("presentacion", nombre=>{
+        usuarios.push({id:socket.id, nombre})
+        socket.emit("historial", mensajes)
+        // console.log(nombre)
+        socket.broadcast.emit("nuevoUsuario", nombre)
+    })
+
+    socket.on("mensaje", (nombre, mensaje)=>{
+        mensajes.push({nombre, mensaje})
+        io.emit("nuevoMensaje", nombre, mensaje)
+    })
+
+    socket.on("disconnect", ()=>{
+        let usuario=usuarios.find(u=>u.id===socket.id)
+        if(usuario){
+            socket.broadcast.emit("saleUsuario", usuario.nombre)
+        }
+    })
+}) 
 
 const connect = async ()=>{
     try {

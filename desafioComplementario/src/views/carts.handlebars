@@ -1,0 +1,26 @@
+<h2>Carritos</h2>
+<hr>
+
+<ul id="carts">
+  {{#each cart}}
+  <li>
+    <div>
+      <h3>{{cid}}</h3>
+    </div>
+    <div>
+      <p>{{code}}</p>
+      <p>{{quantity}}</p>
+      <p>Price: {{price}}</p>
+    </div>
+    <div>
+      <button onclick="suprimir('{{cid}}')">Delete</button>
+    </div>
+  </li>
+  {{/each}}
+</ul>
+<hr>
+<a href="/">Home Page</a>
+<a href="/carts">Cart</a>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

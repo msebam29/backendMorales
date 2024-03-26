@@ -4,6 +4,9 @@ const cartsColl = "carts"
 const cartsSchema = new mongoose.Schema(
     {
         cart:{
+            cid:{
+                type:String, required:true
+            },
             product:{
                 id: String,
                 quantity: Number

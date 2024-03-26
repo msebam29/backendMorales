@@ -1,10 +1,10 @@
 const Router=require('express').Router
-const {join} = require("path")
 const router=Router()
-const ProductManager=require("../dao/ProductManagerFS")
+const CartManagerMongo = require('../dao/CartManagerMongo')
+const ProductManagerMongo = require('../dao/ProductManagerMongo')
 
-const rutaProducts= join(__dirname, "..", "data", "products.json")
-const pm = new ProductManager(rutaProducts)
+const pm = new ProductManagerMongo()
+const cm = new CartManagerMongo()
 
 router.get('/',async (req,res)=>{
     let products = await pm.getProducts()
@@ -12,11 +12,14 @@ router.get('/',async (req,res)=>{
         products
     })
 })
+router.get('/chat', async (req, res)=>{
+    res.status(200).render('chat');
+})
 
-router.get('/realTimeProducts',async (req,res)=>{
-    let products = await pm.getProducts()
-    res.status(200).render("realTimeProducts", { 
-        products
+router.get('/carts',async (req,res)=>{
+    let carts = await cm.getCarts()
+    res.status(200).render("carts", { 
+        carts
     })
 })
 
