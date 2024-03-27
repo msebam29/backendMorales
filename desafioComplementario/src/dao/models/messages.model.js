@@ -3,11 +3,12 @@ const mongoose = require("mongoose")
 const messagesColl = "messages"
 const messagesSchema = new mongoose.Schema(
     {
+        id: String,
         email: {
-            type:String,
+            type: String,
             required: true,
         },
-        message: {
+        messages: {
             type: String
         }
     },

@@ -8,11 +8,17 @@ class MessagesManagerMongo {
     }
 
     async getMessagesByEmail(email) {
-        return await modelMessages.find(email).lean()
+        return await modelMessages.findOne(email).messages
     } 
+    async getMessagesBySocketId(socketId){
+        return await modelMessages.findOne(socketId).lean()
+    }
+    async createUser(user){
+        return await modelMessages.create(user)
+    }
 
-    async addMessages() {        
-        await modelMessages.create(product)
+    async addMessages(email, messages) {        
+        await modelMessages.updateOne(email, messages)
     } 
 
     async deleteMessages(id) {

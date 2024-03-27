@@ -1,16 +1,15 @@
 Swal.fire({
     title:"Identifiquese",
-    input:"text",
-    text:"Ingrese su nickname",
+    input:"email",
+    text:"Ingrese su email",
     inputValidator: (value)=>{
-        return !value && "Debe ingresar un nombre...!!!"
+        return !value && "Debe ingresar un email!!!"
     },
     allowOutsideClick:false
 })
 .then(datos=>{
-    console.log(datos)
-    let nombre=datos.value
-    document.title=nombre
+    let email=datos.value
+    document.title=email
 
     let inputMensaje=document.getElementById("mensaje")
     let divMensajes=document.getElementById("mensajes")
@@ -18,35 +17,34 @@ Swal.fire({
 
     const socket=io()
 
-    socket.emit("presentacion", nombre)
+    socket.emit("presentacion", email)
 
     socket.on("historial", mensajes=>{
         mensajes.forEach(m=>{
-            divMensajes.innerHTML+=`<div class="mensaje"><strong>${m.nombre}</strong> dice: <i>${m.mensaje}</i></div><br>`
+            divMensajes.innerHTML+=`<div class="mensaje"><strong>${m.email}</strong> dice: <i>${m.mensaje}</i></div><br>`
         })
     })
 
-    socket.on("nuevoUsuario", nombre=>{
+    socket.on("nuevoUsuario", usuario=>{
         Swal.fire({
-            text:`${nombre} se ha conectado...!!!`,
+            text:`${usuario.email} se ha conectado...!!!`,
             toast:true,
             position:"top-right"
         })
     })
 
-    socket.on("nuevoMensaje", (nombre, mensaje)=>{
-        divMensajes.innerHTML+=`<div class="mensaje"><strong>${nombre}</strong> dice: <i>${mensaje}</i></div><br>`
+    socket.on("nuevoMensaje", (email, mensaje)=>{
+        divMensajes.innerHTML+=`<div class="mensaje"><strong>${email}</strong> dice: <i>${mensaje}</i></div><br>`
     })
 
-    socket.on("saleUsuario", nombre=>{
-        divMensajes.innerHTML+=`<div class="mensaje"><strong>${nombre}</strong> ha salido del chat... :(</div><br>`
+    socket.on("saleUsuario", email=>{
+        divMensajes.innerHTML+=`<div class="mensaje"><strong>${email}</strong> ha salido del chat... :(</div><br>`
     })
 
     inputMensaje.addEventListener("keyup", e=>{
         e.preventDefault()
-        // console.log(e, e.target.value)
         if(e.code==="Enter" && e.target.value.trim().length>0){
-            socket.emit("mensaje", nombre, e.target.value.trim())
+            socket.emit("mensaje", email, e.target.value.trim())
             e.target.value=""
             e.target.focus()
         }

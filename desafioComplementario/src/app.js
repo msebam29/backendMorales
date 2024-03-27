@@ -6,13 +6,11 @@ const productsRouter = require("./routes/products.router")
 const cartsRouter = require("./routes/carts.router")
 const viewsRouter = require("./routes/views.router")
 const { default: mongoose } = require("mongoose")
+const MessagesManagerMongo = require("./dao/MessagesManagerMongo")
 
 const PORT = 8080
-
-let io
-let usuarios = []
-let mensajes = []
 const app = express()
+const mm = new MessagesManagerMongo()
 
 app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
@@ -24,15 +22,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "/public")))
 
 app.use("/", viewsRouter)
-app.use("/api/products", (req, res, next) => {
-    req.io = io
-    next()
-}, productsRouter)
-
-/* app.use("/api/carts", (req, res, next) => {
-    req.io = io
-    next()
-}, cartsRouter) */
+app.use("/api/products", productsRouter)
+/* app.use("/api/carts", cartsRouter) */
 
 app.get("*", (req, res) => {
     res.setHeader("Content-Type", "text/plain")
@@ -43,30 +34,34 @@ const server = app.listen(PORT, () => {
     console.log(`Server ON LINE en puerto ${PORT}`)
 })
 
-io = new Server(server)
+const io=new Server(server)   // websocket server
 
 io.on("connection", socket=>{
     console.log(`Se conecto un cliente con id ${socket.id}`)
     
-    socket.on("presentacion", nombre=>{
-        usuarios.push({id:socket.id, nombre})
+    socket.on("presentacion", async email=>{
+        let usuario = await mm.createUser({id:socket.id, email})
+        let mensajes= await mm.getMessagesByEmail({email})/* .messages */
+        console.log(mensajes);
+        
         socket.emit("historial", mensajes)
-        // console.log(nombre)
-        socket.broadcast.emit("nuevoUsuario", nombre)
+        
+        socket.broadcast.emit("nuevoUsuario", usuario)
     })
 
-    socket.on("mensaje", (nombre, mensaje)=>{
-        mensajes.push({nombre, mensaje})
-        io.emit("nuevoMensaje", nombre, mensaje)
+    socket.on("mensaje", async (email, mensaje)=>{
+        await mm.addMessages({email, mensaje})
+        io.emit("nuevoMensaje", email, mensaje)
     })
 
-    socket.on("disconnect", ()=>{
-        let usuario=usuarios.find(u=>u.id===socket.id)
+    socket.on("disconnect", async ()=>{
+        let id = socket.id
+        let usuario=await mm.getMessagesBySocketId({id})
         if(usuario){
-            socket.broadcast.emit("saleUsuario", usuario.nombre)
-        }
+            socket.broadcast.emit("saleUsuario", usuario.email)
+        } 
     })
-}) 
+})
 
 const connect = async ()=>{
     try {
