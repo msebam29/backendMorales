@@ -11,16 +11,16 @@ class CartManagerMongo {
         return await modelCarts.findById(cid).lean()
     }
 
-    async createCart(cid, product={}) {
-        return await modelCarts.create(cid, product)
+    async createCart(product) {
+        return await modelCarts.create({products:[product]})
     }
 
-    async updateCart(cid, contenido={}) {
-        return await modelCarts.updateOne(cid, contenido)
+    async updateCart(cid, product) {
+        return await modelCarts.updateOne({_id:cid}, {$push: {products:product}})
     }
 
     async deleteCart(cid){
-        return await modelCarts.deleteOne(cid)
+        return await modelCarts.deleteOne({_id:cid})
     }    
 }
 

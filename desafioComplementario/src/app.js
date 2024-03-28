@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, "/public")))
 
 app.use("/", viewsRouter)
 app.use("/api/products", productsRouter)
-/* app.use("/api/carts", cartsRouter) */
+app.use("/api/carts", cartsRouter)
 
 app.get("*", (req, res) => {
     res.setHeader("Content-Type", "text/plain")
