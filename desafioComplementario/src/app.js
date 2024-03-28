@@ -6,11 +6,11 @@ const productsRouter = require("./routes/products.router")
 const cartsRouter = require("./routes/carts.router")
 const viewsRouter = require("./routes/views.router")
 const { default: mongoose } = require("mongoose")
-const MessagesManagerMongo = require("./dao/MessagesManagerMongo")
+const ChatManagerMongo = require("./dao/ChatManagerMongo")
 
 const PORT = 8080
 const app = express()
-const mm = new MessagesManagerMongo()
+const cm = new ChatManagerMongo()
 
 app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
@@ -40,23 +40,26 @@ io.on("connection", socket=>{
     console.log(`Se conecto un cliente con id ${socket.id}`)
     
     socket.on("presentacion", async email=>{
-        let usuario = await mm.createUser({id:socket.id, email})
-        let mensajes= await mm.getMessagesByEmail({email})/* .messages */
-        console.log(mensajes);
+        let user = await cm.existUser(email)
+
+        if(user){
+            socket.emit("historial", user.email, user.messages)
+        }else{
+            await cm.createUser({email})
+            socket.broadcast.emit("nuevoUsuario", email)
+        }   
         
-        socket.emit("historial", mensajes)
-        
-        socket.broadcast.emit("nuevoUsuario", usuario)
     })
 
     socket.on("mensaje", async (email, mensaje)=>{
-        await mm.addMessages({email, mensaje})
+        let user = await cm.getUserByFilter({email:email})
+        await cm.addMessage(user._id, mensaje)
         io.emit("nuevoMensaje", email, mensaje)
     })
 
     socket.on("disconnect", async ()=>{
         let id = socket.id
-        let usuario=await mm.getMessagesBySocketId({id})
+        let usuario=await cm.getUserByFilter({id})
         if(usuario){
             socket.broadcast.emit("saleUsuario", usuario.email)
         } 

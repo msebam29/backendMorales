@@ -1,12 +1,10 @@
 Swal.fire({
-    title:"Identifiquese",
-    input:"email",
-    text:"Ingrese su email",
-    inputValidator: (value)=>{
-        return !value && "Debe ingresar un email!!!"
-    },
-    allowOutsideClick:false
-})
+    title: "Bienvenido al chat",
+    input: "email",
+    inputLabel: "Su email para identificarse",
+    inputPlaceholder: "Ingrese su email",
+    allowOutsideClick:false    
+  })
 .then(datos=>{
     let email=datos.value
     document.title=email
@@ -19,15 +17,15 @@ Swal.fire({
 
     socket.emit("presentacion", email)
 
-    socket.on("historial", mensajes=>{
-        mensajes.forEach(m=>{
-            divMensajes.innerHTML+=`<div class="mensaje"><strong>${m.email}</strong> dice: <i>${m.mensaje}</i></div><br>`
+    socket.on("historial",async (email, mensajes)=>{
+        await mensajes.forEach(m=>{
+            divMensajes.innerHTML+=`<div class="mensaje"><strong>${email}</strong> dice: <i>${m}</i></div><br>`
         })
     })
 
-    socket.on("nuevoUsuario", usuario=>{
+    socket.on("nuevoUsuario", user=>{
         Swal.fire({
-            text:`${usuario.email} se ha conectado...!!!`,
+            text:`${user} se ha conectado...!!!`,
             toast:true,
             position:"top-right"
         })

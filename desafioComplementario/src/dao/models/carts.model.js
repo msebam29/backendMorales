@@ -3,15 +3,17 @@ const mongoose = require("mongoose")
 const cartsColl = "carts"
 const cartsSchema = new mongoose.Schema(
     {
-        cart:{
-            cid:{
-                type:String, required:true
+        cart: {
+            cid: {
+                type: String, required: true
             },
-            product:{
-                id: String,
-                quantity: Number
-            }
-        }    
+            products: [
+                /* product, {
+                    id: String,
+                    quantity: Number
+                } */
+            ]
+        }
     },
     {
         timestamps: true, strict: false
