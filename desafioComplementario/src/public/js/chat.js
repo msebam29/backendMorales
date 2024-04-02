@@ -1,50 +1,58 @@
+const fecha = () =>{
+    new Date().toLocaleDateString()
+} 
 Swal.fire({
-    title: "Bienvenido al chat",
-    input: "email",
-    inputLabel: "Su email para identificarse",
-    inputPlaceholder: "Ingrese su email",
-    allowOutsideClick:false    
-  })
+        title: "Bienvenido al chat",
+        input: "email",
+        inputLabel: "Su email para identificarse",
+        inputPlaceholder: "Ingrese su email",
+        allowOutsideClick: false
+    })
 .then(datos=>{
-    let email=datos.value
-    document.title=email
+    let user= datos.value
 
-    let inputMensaje=document.getElementById("mensaje")
-    let divMensajes=document.getElementById("mensajes")
-    inputMensaje.focus()
+    document.title = user
 
-    const socket=io()
+let inputMensaje = document.getElementById("mensaje")
+let divMensajes = document.getElementById("mensajes")
+inputMensaje.focus()
 
-    socket.emit("presentacion", email)
+const socket = io()
 
-    socket.on("historial",async (email, mensajes)=>{
-        await mensajes.forEach(m=>{
-            divMensajes.innerHTML+=`<div class="mensaje"><strong>${email}</strong> dice: <i>${m}</i></div><br>`
-        })
-    })
+socket.emit("presentacion", user, "Usuario creado")
 
-    socket.on("nuevoUsuario", user=>{
-        Swal.fire({
-            text:`${user} se ha conectado...!!!`,
-            toast:true,
-            position:"top-right"
-        })
-    })
 
-    socket.on("nuevoMensaje", (email, mensaje)=>{
-        divMensajes.innerHTML+=`<div class="mensaje"><strong>${email}</strong> dice: <i>${mensaje}</i></div><br>`
-    })
-
-    socket.on("saleUsuario", email=>{
-        divMensajes.innerHTML+=`<div class="mensaje"><strong>${email}</strong> ha salido del chat... :(</div><br>`
-    })
-
-    inputMensaje.addEventListener("keyup", e=>{
-        e.preventDefault()
-        if(e.code==="Enter" && e.target.value.trim().length>0){
-            socket.emit("mensaje", email, e.target.value.trim())
-            e.target.value=""
-            e.target.focus()
-        }
+socket.on("historial", async (user) => {
+    await user.forEach(u => {
+        divMensajes.innerHTML += `<div class="mensaje"><strong>${u.user}</strong> dice: <i>${u.message}</i></div><br>`
     })
 })
+
+socket.on("nuevoUsuario", user => {
+    Swal.fire({
+        text: `${user} se ha conectado...!!!`,
+        toast: true,
+        position: "top-right"
+    })
+})
+
+socket.on("nuevoMensaje", (user, message) => {
+    divMensajes.innerHTML += `<div class="mensaje"><strong>${user}</strong> dice: <i>${message}</i></div><br>`
+})
+
+socket.on("saleUsuario", user => {
+    divMensajes.innerHTML += `<iv class="mensaje"><strong>${user.user}</strong> ha salido del chat... :(</iv><br>`
+})
+
+inputMensaje.addEventListener("keyup", e => {
+    e.preventDefault()
+    if (e.code === "Enter" && e.target.value.trim().length > 0) {
+        socket.emit("mensaje", user, e.target.value.trim())
+        e.target.value = ""
+        e.target.focus()
+    }
+})
+})
+
+
+

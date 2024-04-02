@@ -4,17 +4,14 @@ const modelChat = require("./models/chat.model");
 class ChatManagerMongo {
     constructor() {
     }
-    async createUser(user){
-        return await modelChat.create(user)
+    async findUser(sockId){
+        return await modelChat.findOne({sockId:sockId})
     }
     async existUser(user) {
-        return await modelChat.findOne({email:user})
+        return await modelChat.find({user:user})
     } 
-    async getUserByFilter(filter){
-        return await modelChat.findOne(filter)
-    }
-    async addMessage(id, mensaje) {        
-        await modelChat.updateOne({_id:id}, {$push:{messages:mensaje}})
+    async addMessage(user) {        
+        return await modelChat.create(user)
     }     
 }
 

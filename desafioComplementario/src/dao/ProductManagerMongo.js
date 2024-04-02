@@ -26,6 +26,9 @@ class ProductManagerMongo {
     async deleteProduct(id) {
         return await modelProducts.deleteOne({_id:id})
     }
+    async paginate(limit, page, lean){
+        return await modelProducts.paginate(limit, page, lean)
+    }
 }
 
 module.exports= ProductManagerMongo

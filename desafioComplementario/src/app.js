@@ -34,45 +34,43 @@ const server = app.listen(PORT, () => {
     console.log(`Server ON LINE en puerto ${PORT}`)
 })
 
-const io=new Server(server)   // websocket server
+const io = new Server(server)   // websocket server
 
-io.on("connection", socket=>{
-    console.log(`Se conecto un cliente con id ${socket.id}`)
-    
-    socket.on("presentacion", async email=>{
-        let user = await cm.existUser(email)
+io.on("connection", socket => {
+    let id = socket.id
+    console.log(`Se conecto un cliente con id ${id}`)
 
-        if(user){
-            socket.emit("historial", user.email, user.messages)
-        }else{
-            await cm.createUser({email})
-            socket.broadcast.emit("nuevoUsuario", email)
-        }   
-        
+    socket.on("presentacion", async (user, message) => {
+        let existe = await cm.existUser(user)
+        if (existe.length > 0) {
+            socket.emit("historial", existe)
+        } else {
+            await cm.addMessage({ sockId:id, user: user, message: message })
+        }
+        socket.broadcast.emit("nuevoUsuario", user)
     })
 
-    socket.on("mensaje", async (email, mensaje)=>{
-        let user = await cm.getUserByFilter({email:email})
-        await cm.addMessage(user._id, mensaje)
-        io.emit("nuevoMensaje", email, mensaje)
+    socket.on("mensaje", async (user, message) => {
+        await cm.addMessage({ user: user, message: message })
+        io.emit("nuevoMensaje", user, message)
     })
 
-    socket.on("disconnect", async ()=>{
+    socket.on("disconnect", async () => {
         let id = socket.id
-        let usuario=await cm.getUserByFilter({id})
-        if(usuario){
-            socket.broadcast.emit("saleUsuario", usuario.email)
-        } 
+        let user = await cm.findUser(id)
+        socket.broadcast.emit("saleUsuario", user)
     })
 })
 
-const connect = async ()=>{
+const connect = async () => {
     try {
-        await mongoose.connect("mongodb+srv://msebam29:codercoder@cluster0.vwoagpr.mongodb.net/?retryWrites=true&w=majority")
+        await mongoose.connect("mongodb+srv://msebam29:codercoder@cluster0.vwoagpr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=ecommerce")
         console.log('DB conectada');
     } catch (error) {
         console.log("Error en la conexión a DB. Detalle", error.message);
-        
+
     }
 }
 connect()
+
+
