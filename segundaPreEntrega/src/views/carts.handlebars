@@ -1,0 +1,34 @@
+<h2>Carritos</h2>
+<hr>
+
+<ul id="carts">
+  {{#each cart}}
+  <li>
+    <div>
+      <h3>{{_id}}</h3>
+    </div>
+    <div>
+      <p>{{products.code}}</p>
+      <p>{{products.quantity}}</p>
+      <p>Price: {{products.price}}</p>
+    </div>
+    <div>
+      <button onclick="suprimir('{{_id}}')">Delete</button>
+    </div>
+  </li>
+  {{/each}}
+</ul>
+<hr>
+<a href="/carts?pagina=1">Carrito 1</a>
+{{#if hasPrevPage}}
+    <a href="/carts?pagina={{prevPage}}">Carrito Ant.</a>
+{{/if}}
+{{#if hasNextPage}}
+    <a href="/carts?pagina={{nextPage}}">Carrito Sig.</a>
+{{/if}}
+<a href="/carts?pagina={{totalPages}}">Ult. Carrito</a>
+<hr>
+
+<a href="/">Home Page</a>
+<a href="/chat">Chat</a>
+

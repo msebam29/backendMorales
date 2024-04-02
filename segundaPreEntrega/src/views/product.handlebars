@@ -1,0 +1,17 @@
+<h2>Producto</h2>
+<hr>
+<ul>
+    <li>
+        <small>{{product.category}}</small>
+        <h3>{{product.title}}</h3>
+        <p>{{product.description}}</p>
+        <p>Precio: ${{product.price}}</p>
+        <small>{{product.code}}</small>
+    </li>
+    <div>
+      <button onclick="agregarCarrito('{{product._id}}')">Agregar al Carrito</button>
+    </div>
+    <br>
+<a href="/">Home Page</a>
+<a href="/chat">Chat</a>
+<a href="/carts">Carts</a>
