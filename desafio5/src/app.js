@@ -9,7 +9,7 @@ const sessionsRouter = require("./routes/sessions.router")
 const { default: mongoose } = require("mongoose")
 const ChatManagerMongo = require("./dao/ChatManagerMongo")
 const session = require("express-session")
-const {MongoStore} = require("connect-mongo")
+const MongoStore = require("connect-mongo")
 
 
 const PORT = 8080
@@ -25,14 +25,16 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "/public")))
 app.use(session(
     {
-        secret:"CoderCoder123",
-        resave: true, 
+        secret: "CoderCoder123",
+        resave: true,
         saveUninitialized: true,
-        store: MongoStore.create({
-            mongoUrl: "mongodb+srv://msebam29:codercoder@cluster0.vwoagpr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=ecommerce",
-            ttl: 60
-        })
-}))
+        store: MongoStore.create(
+            {
+                mongoUrl: "mongodb+srv://msebam29:codercoder@cluster0.vwoagpr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=ecommerce",
+                ttl: 60
+            }
+        )
+    }))
 
 app.use("/", viewsRouter)
 app.use("/api/products", productsRouter)
@@ -59,7 +61,7 @@ io.on("connection", socket => {
         if (existe.length > 0) {
             socket.emit("historial", existe)
         } else {
-            await cm.addMessage({ sockId:id, user: user, message: message })
+            await cm.addMessage({ sockId: id, user: user, message: message })
         }
         socket.broadcast.emit("nuevoUsuario", user)
     })
