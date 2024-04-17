@@ -65,7 +65,7 @@ const inicializaPassport = () => {
             async function (accesToken, refreshToken, profile, done){
                 try {
                     let nombre = profile._json.name
-                    let email = profile._jason.email
+                    let email = profile._json.email
                     if(!email){
                         return done(null, false)
                     }
