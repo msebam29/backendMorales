@@ -49,7 +49,7 @@ router.post('/login', async (req, res)=>{
     req.session.usuario=user
 
     res.setHeader('Content-Type','application/json');
-    return res.status(200).json({message:"Login correcto", user});
+    return res.status(200).json({message:"Login correcto", user})    
 })
 
 router.get('/logout', (req, res)=>{
