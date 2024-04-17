@@ -54,6 +54,35 @@ const inicializaPassport = () => {
             }
         )
     )
+    passport.use(
+        "github",
+        new gitHub.Strategy(
+            {
+                clientID:"",
+                clientSecret:"",
+                callbackURL:""
+            },
+            async function (accesToken, refreshToken, profile, done){
+                try {
+                    let nombre = profile._json.name
+                    let email = profile._jason.email
+                    if(!email){
+                        return done(null, false)
+                    }
+                    let user = await usersManager.getBy({email})
+                    if(!user){
+                        user=await usersManager.create({
+                            nombre, email,
+                            profileGithub: profile
+                        })
+                    }
+                    return done(null, user)
+                } catch (error) {
+                    return done(error)                   
+                }
+            }
+        )
+    )
     passport.serializeUser((user, done) => {
         return done(null, user._id)
     })

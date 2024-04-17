@@ -26,6 +26,19 @@ router.post('/login', passport.authenticate("login", {failureRedirect:"/api/sess
     res.setHeader('Content-Type','application/json');
     return res.status(200).json({message:"Login correcto", user});
 })
+router.get("/github", passport.authenticate("github", {failureRedirect:"/api/sessions/errorGitHub"}), (req, res)=>{
+    req.session.user=req.user
+    res.setHeader('Content-Type','application/json');
+    return res.status(200).json({payload:"Login correcto", user:req.user});
+})
+router.get("/errorGitHub", (req, res)=>{
+    res.setHeader('Content-Type','application/json');
+    return res.status(500).json({
+        error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+        detalle: "Fallo al autenticar con GitHub"
+    })
+    
+})
 
 router.get('/logout', (req, res)=>{
     req.session.destroy(e=>{
