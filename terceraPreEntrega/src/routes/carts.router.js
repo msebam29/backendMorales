@@ -9,4 +9,5 @@ router.put("/:cid", CartsController.updateCart)
 router.put("/:cid/products/:pid", CartsController.updateProductCart)
 router.delete("/:cid/products/:pid", CartsController.deleteProduct)
 router.delete("/:cid", CartsController.deleteCart)
+router.put("/:cid/purchase", CartsController.comprarCart)
 module.exports = router
