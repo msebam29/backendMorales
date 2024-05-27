@@ -1,20 +1,40 @@
-const config = require("../config/config.js");
+import {config} from "../config/config.js";
+import mongoose, {connect} from "mongoose";
 
-let ProductsManagerDAO
+export let carts;
+export let products;
+export let users;
+export let tickets;
+export let messages;
 
-if(config.PERSISTENCE="MONGO"){
-    ProductManagerDAO = require ("../dao/ProductManagerMongo.js")
-}
-if(config.PERSISTENCE="MEMORY"){
-    ProductManagerDAO = require ("../dao/ProductManagerFS.js")
-}
+switch (config.PERSISTENCE) {
+    case 'MONGO':
+        const connection = mongoose.connect(/* config.MONGO_URL */ "mongodb+srv://msebam29:codercoder@cluster0.vwoagpr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=ecommerce");
+        const {default:CartsMongo} = await import('./managersMongoDb/CartsManagerMongo.js');
+        const {default:ProductsMongo} = await import('./managersMongoDb/ProductManagerMongo.js');
+        const {default:UsersMongo} = await import('./managersMongoDb/UserManagerMongo.js');
+        const {default:TicketsMongo} = await import('./managersMongoDb/TicketManagerMongo.js');
+        const {default:MessagesMongo} = await import('./managersMongoDb/MessageManagerMongo.js');
 
-let CartsManagerDAO
-if(config.PERSISTENCE="MONGO"){
-    CartManagerDAO = require ("../dao/CartManagerMongo.js")
-}
-if(config.PERSISTENCE="MEMORY"){
-    CartManagerDAO = require ("../dao/CartManagerFS.js")
-}
+        carts = CartsMongo;
+        products = ProductsMongo;
+        users = UsersMongo;
+        tickets = TicketsMongo;
+        messages = MessagesMongo;
+    break;
 
-module.exports = {ProductsManagerDAO, CartsManagerDAO}
+    case 'FILE_SYSTEM':
+        const {default:CartsFS} = await import('./managersFileSystem/CartManager.js');
+        const {default:ProductsFS} = await import('./managersFileSystem/ProductManager.js');
+        const {default:UsersFS} = await import('./managersFileSystem/UserManager.js');
+        const {default:TicketsFS} = await import('./managersFileSystem/TicketManager.js');
+        const {default:MessagesFS} = await import('./managersFileSystem/MessageManager.js');
+        
+        carts = CartsFS;
+        products = ProductsFS;
+        users = UsersFS;
+        tickets = TicketsFS;
+        messages = MessagesFS;
+    break;
+}
+console.log(carts);

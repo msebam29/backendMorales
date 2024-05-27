@@ -1,32 +1,20 @@
+const form = document.getElementById('loginForm');
 
-let btnSubmit=document.getElementById("submit")
-let inputEmail=document.getElementById("email")
-let inputPassword=document.getElementById("password")
-let divMensaje=document.getElementById("mensaje")
-
-btnSubmit.addEventListener("click", async(e)=>{
+form.addEventListener('submit', e => {
     e.preventDefault()
-
-    let body={
-        email:inputEmail.value,
-        password:inputPassword.value
-    }
-
-    let resultado=await fetch("/api/sessions/login",{
-        method:"post",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify(body)
+    const data = new FormData(form);
+    const obj = {};
+    data.forEach((value, key) => obj[key] = value); //transformamos el array de data a objeto con un forEach.
+    fetch('/api/sessions/login', {            //realizamos un post a la url indicada, enviandole el objeto por body. 
+        method: 'POST',
+        body: JSON.stringify(obj),
+        headers: {
+            'Content-Type':'application/json'
+        }
+    }).then(result =>{
+        console.log(result.status)
+        if(result.status === 200)   {       //si el usuario recibe todo bien le enviamos un 200
+            window.location.replace('/products')    // lo redireccionamos a la pagina principal luego de logearse. 
+        }
     })
-    let status=resultado.status
-    let datos=await resultado.json()
-    if(status==200){
-        divMensaje.style.color="green"
-        divMensaje.innerHTML=datos.message
-    }else{
-        divMensaje.style.color="red"
-        divMensaje.innerHTML=datos.error
-    }
-
 })

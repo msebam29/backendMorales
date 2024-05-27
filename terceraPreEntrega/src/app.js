@@ -1,98 +1,73 @@
-const express = require("express")
-const path = require("path")
-const engine = require("express-handlebars").engine
-const { Server } = require("socket.io")
-const productsRouter = require("./routes/products.router")
-const cartsRouter = require("./routes/carts.router")
-const viewsRouter = require("./routes/views.router")
-const sessionsRouter = require("./routes/sessions.router")
-const { default: mongoose } = require("mongoose")
-const ChatManagerMongo = require("./dao/ChatManagerMongo")
-const session = require("express-session")
-const MongoStore = require("connect-mongo")
-const config = require("./config/config.js")
+import express from "express"; 
+import __dirname from "../src/utils/utils.js"; 
+import handlebars from 'express-handlebars'; 
+import { Server } from "socket.io"; 
+import mongoose from "mongoose";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+import cookieParser from "cookie-parser";
+import productsRouter from './routers/products.router.js'; 
+import cartsRouter from './routers/carts.router.js';
+import sessionRouter from './routers/sessions.router.js';
+import usersRouter from './routers/users.router.js'
+import viewsRouter from './routers/views.router.js';
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
+import { productService } from "./services/index.js";
+import { messageService } from "./services/index.js";
+import { userService } from "./services/index.js";
+import {config} from './config/config.js';
 
-const inicializaPassport = require("./config/passport.config")
-const passport = require("passport")
-
-const PORT = config.PORT
 const app = express()
-const cm = new ChatManagerMongo()
+const port = config.PORT || 8080;
+const httpServer = app.listen( port , () => {console.log('Server ON in port:', config.PORT)})
+const socketServer = new Server(httpServer);
 
-app.engine("handlebars", engine())
-app.set("view engine", "handlebars")
-app.set("views", path.join(__dirname, "/views"))
+app.use(express.json()); 
+app.use(express.urlencoded({extended:true})); 
+app.use(express.Router()); 
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.static(path.join(__dirname, "/public")))
-app.use(session(
-    {
-        secret: config.SECRET,
-        resave: true,
-        saveUninitialized: true,
-        store: MongoStore.create(
-            {
-                mongoUrl: config.MONGO_URL,
-                ttl: 60
-            }
-        )
-    }))
-inicializaPassport()
-app.use(passport.initialize())
-app.use(passport.session())
+mongoose.connect(process.env.MONGO_URL)
 
-app.use("/", viewsRouter)
-app.use("/api/products", productsRouter)
-app.use("/api/carts", cartsRouter)
-app.use("/api/sessions", sessionsRouter)
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: config.MONGO_URL,
+        ttl:3600
+    }),
+    secret: 'CoderSecret',
+    resave: false,
+    saveUninitialized: false
+}))
 
-app.get("*", (req, res) => {
-    res.setHeader("Content-Type", "text/plain")
-    res.status(404).send("Error 404 - Page Not Found")
-})
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(cookieParser());
 
-const server = app.listen(PORT, () => {
-    console.log(`Server ON LINE en puerto ${PORT}`)
-})
+app.use('/static' , express.static(__dirname +'/src/public'));
 
-const io = new Server(server)   // websocket server
+app.engine('handlebars' , handlebars.engine());
+app.set('views', __dirname + '/src/views');
+app.set('view engine', 'handlebars');
 
-io.on("connection", socket => {
-    let id = socket.id
-    console.log(`Se conecto un cliente con id ${id}`)
+app.use('/api/products' , productsRouter); 
+app.use('/api/carts' , cartsRouter); 
+app.use('/api/sessions', sessionRouter); 
+app.use('/api/users' , usersRouter); 
+app.use('/', viewsRouter); 
 
-    socket.on("presentacion", async (user, message) => {
-        let existe = await cm.existUser(user)
-        if (existe.length > 0) {
-            socket.emit("historial", existe)
-        } else {
-            await cm.addMessage({ sockId: id, user: user, message: message })
-        }
-        socket.broadcast.emit("nuevoUsuario", user)
+socketServer.on('connection', async (socket) => {
+    console.log("nuevo cliente conectado 2")
+    socket.on('authenticated', data => {
+        console.log(data)
+        socket.broadcast.emit('newUserConnected', data);
     })
-
-    socket.on("mensaje", async (user, message) => {
-        await cm.addMessage({ user: user, message: message })
-        io.emit("nuevoMensaje", user, message)
+    socket.on('message', async data => {
+        console.log(data)
+        const addMessage = await messageService.addMessages(data);
+        const messages = await messageService.getMessages(); 
+        socket.emit('messageLogs', messages);
     })
+});
 
-    socket.on("disconnect", async () => {
-        let id = socket.id
-        let user = await cm.findUser(id)
-        socket.broadcast.emit("saleUsuario", user)
-    })
-})
-
-const connect = async () => {
-    try {
-        await mongoose.connect("mongodb+srv://msebam29:codercoder@cluster0.vwoagpr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=ecommerce")
-        console.log('DB conectada');
-    } catch (error) {
-        console.log("Error en la conexión a DB. Detalle", error.message);
-
-    }
-}
-connect()
-
-
+export default app;
