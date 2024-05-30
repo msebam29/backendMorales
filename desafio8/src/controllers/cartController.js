@@ -2,6 +2,8 @@ import { cartService } from "../services/index.js";
 import { productService } from "../services/index.js";
 import { userService } from "../services/index.js";
 import { ticketService } from "../services/index.js";
+import { CustomError } from "../errors/customError.js";
+import { errorList } from "../utils/errorList.js";
 
 export const getAllCarts = async (req, res) => {
 	try {
@@ -25,7 +27,7 @@ export const getCartById = async (req, res) => {
 		const cartID = req.params.cid;
 		const getCart = await cartService.getCartById(cartID);
 		if (!getCart) {
-			res.status(400).json (`Carrito con el id ${cartID} no existe`);
+			throw new CustomError (errorList.CART_NOT_FOUND.status, errorList.CART_NOT_FOUND.code, errorList.CART_NOT_FOUND.message)
 		}
 		res.status(200).json({ status: 'success', payload: getCart });
 	} catch (error) {
@@ -137,7 +139,7 @@ export const purchase = async (req,res) => {
 			const productInDB = await productService.getProductById(idproduct)
 			if(quantity > productInDB.stock){  
 				purchaseError.push(product);  
-				res.status(404).json({ status: 'error', message:`El producto ${product.productID} no tiene suficiente stock.`})
+				throw new CustomError(errorList.INSUFFICIENT_STOCK.status, errorList.INSUFFICIENT_STOCK.code, errorList.INSUFFICIENT_STOCK.message)
 			}
 	
 			if(quantity <= productInDB.stock){	

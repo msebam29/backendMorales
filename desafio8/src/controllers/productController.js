@@ -1,5 +1,7 @@
+import { CustomError } from "../errors/customError.js";
 import { productService } from "../services/index.js";
 import { userService } from "../services/index.js";
+import { errorList } from "../utils/errorList.js";
 
 export const getProductsQuery = async (req, res) => {
     const { limit, page, sort, category  } = req.query;
@@ -15,7 +17,7 @@ export const getProductById = async (req, res) => {
         const {pid} = req.params
         const product = await productService.getProductById(pid)
         if (!product) {
-            res.status(400).json({error:'404:Producto no encontrado'})
+            throw new CustomError(errorList.PRODUCT_NOT_FOUND.status, errorList.PRODUCT_NOT_FOUND.code, errorList.PRODUCT_NOT_FOUND.message)
         }
         res.status(200).json({status:'success', payload:product});
     }catch(error){
