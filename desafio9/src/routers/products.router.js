@@ -5,13 +5,15 @@ import {
     addProduct, 
     updateProduct, 
     deleteProduct,
-    mockProducts
+    mockProducts,
+    loggerTest
 } from '../controllers/productController.js';
 import { passportCall } from '../utils/utils.js';
 import upload from '../middlewares/multerConfig.js'
 
 const router = Router()
 router.get('/mockingproducts', mockProducts)
+router.get('/loggerTest', loggerTest)
 router.get('/' , getProductsQuery );
 router.get('/:pid' , getProductById );
 router.post('/' , upload.single('product'), passportCall('jwt'), addProduct );

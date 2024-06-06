@@ -1,5 +1,6 @@
 import  jwt  from "jsonwebtoken";
 import { userService } from "../services/index.js";
+import { logger } from "../utils/utils.js";
 
 export const register = async (req, res) => {
     res.status(200).json({status:"success", message: "Usuario registrado correctamente"});
@@ -63,6 +64,7 @@ export const logOutJwt = async (req, res) => {
         res.status(200).json({message:'JWT logout exitoso'})
         res.redirect('/');
     } catch (error) {
+        logger.error("Error al cerrar sesión", error)
         return res.status(500).json({ status: 'error', error: 'Error del servidor: Error al cerrar la sesión JWT' });
     }
 }

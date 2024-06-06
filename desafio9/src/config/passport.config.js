@@ -3,8 +3,9 @@ import local from "passport-local";
 import jwt from 'passport-jwt';
 import GitHubStrategy from 'passport-github2';
 import { userService, cartService } from "../services/index.js";
-import {cookieExtractor , createHash , isValidPassword} from '../utils/utils.js'
+import {cookieExtractor , createHash , isValidPassword, logger} from '../utils/utils.js'
 import {config} from './config.js'
+
 
 const admin = {
     first_name: 'Coder',
@@ -45,6 +46,7 @@ const initializePassport = async () => {
     passport.use('login', new local.Strategy(
         {usernameField: 'email', session: false}, async (username, password, done) => {
         try {
+            logger.info(`Intento de inicio de sesion para usuario ${username}`)
             if (username === admin.email && password === admin.password) {
                 const adminUser = admin
                 return done(null, adminUser)
