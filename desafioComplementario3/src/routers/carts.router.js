@@ -10,9 +10,11 @@ import {
 	modifyProductQuantity,
 	purchase
 } from "../controllers/cartController.js";
-import { passportCall } from "../utils/utils.js";
+import { passportCall } from "../../utils.js";
+import { addLogger } from "../utils/logger.js";
 
 const router = Router();
+router.use(addLogger);
 router.get('/' , getAllCarts);
 router.post('/', createNewCart);
 router.get('/:cid' , getCartById);

@@ -1,18 +1,20 @@
-// Importa el modelo de datos relacionado con los mensajes.
 import { messageModel } from "../../models/message.model.js";
 
-
 export default class messageManager{
-    constructor() {}
+
+    constructor() {
+    }
+
     getMessages = async () => {
         try{
             const messages = await messageModel.find()
             return messages
         }catch(error){
-            console.log('No hay mensajes para leer',error.message); 
+            console.error('No hay mensajes para leer',error.message); 
             return error
         }
     }
+
     addMessages = async (message) => {
         try{
             return await messageModel.create(message);

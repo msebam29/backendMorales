@@ -1,14 +1,17 @@
 import express from "express"; 
-import __dirname, { logger, middLogg } from "../src/utils/utils.js"; 
+import __dirname from "../utils.js"; 
 import handlebars from 'express-handlebars'; 
 import { Server } from "socket.io"; 
-import mongoose from "mongoose";
+import mongoose, { connect } from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import productsRouter from './routers/products.router.js'; 
 import cartsRouter from './routers/carts.router.js';
 import sessionRouter from './routers/sessions.router.js';
+import mockingRouter from './routers/mocking.router.js'
+import mailingRouter from './routers/mailing.router.js'
+import loggerRouter from './routers/logger.router.js'
 import usersRouter from './routers/users.router.js'
 import viewsRouter from './routers/views.router.js';
 import passport from "passport";
@@ -16,19 +19,34 @@ import initializePassport from "./config/passport.config.js";
 import { productService } from "./services/index.js";
 import { messageService } from "./services/index.js";
 import { userService } from "./services/index.js";
-import {config} from './config/config.js';
+
+import config from './config/config.js';
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+
 
 const app = express()
 const port = config.PORT || 8080;
-const httpServer = app.listen( port , () => {logger.info('Server ON in port:', port)})
-const socketServer = new Server(httpServer);
+const httpServer = app.listen( port , () => {console.log('Server ON in port:', config.PORT)})
 
-app.use(middLogg)
+const socketServer = new Server(httpServer);
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentacion Market Place',
+            description: 'API pensada para aplicacion de un Marketplace'
+        }
+    },
+    apis: [`${__dirname}/src/docs/**/*.yaml`]
+}
+
+const specs = swaggerJsdoc(swaggerOptions);
+app.use('/api/docs',swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 app.use(express.json()); 
-app.use(express.urlencoded({extended:true})); 
+app.use(express.urlencoded({extended:true}));
 app.use(express.Router()); 
 mongoose.connect(process.env.MONGO_URL)
-
 app.use(session({
     store: MongoStore.create({
         mongoUrl: config.MONGO_URL,
@@ -38,23 +56,51 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
-
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
-
 app.use('/static' , express.static(__dirname +'/src/public'));
-
 app.engine('handlebars' , handlebars.engine());
 app.set('views', __dirname + '/src/views');
 app.set('view engine', 'handlebars');
-
 app.use('/api/products' , productsRouter); 
 app.use('/api/carts' , cartsRouter); 
 app.use('/api/sessions', sessionRouter); 
+app.use('/mocking' , mockingRouter);
+app.use('/mail', mailingRouter); 
+app.use('/loggerTest', loggerRouter ); 
 app.use('/api/users' , usersRouter); 
 app.use('/', viewsRouter); 
+
+socketServer.on('connection', async (socket) => {
+    console.log("nuevo cliente conectado")
+    const products = await productService.getProducts()
+    socket.emit('productos', products); 
+    socket.on('addProduct', async data => {
+        const updateProductsList = await productService.getProducts();
+        socket.emit('updatedProducts', updateProductsList );
+        socket.emit('productAdded'); 
+    })
+
+    socket.on('updateProduct', async (productData, userData) => {
+        const idProduct = productData._id;
+        delete productData._id; 
+        const product = await productService.getProductById(idProduct);
+        if (userData.role === 'admin' || product.owner === userData._id) {
+            await productService.updateProduct(idProduct, { $set: productData });
+            const updateProductsList = await productService.getProducts();
+            socket.emit('updatedProducts', updateProductsList ); 
+            socket.emit('productUpdated');
+        } else {
+            socket.emit('error',  'No tienes permiso para actualizar este producto.' );
+        }
+    });
+    socket.on('deleteProduct', async (productId , userData) => {
+        const updateProducts = await productService.getProducts(); 
+        socket.emit('updatedProducts', updateProducts ); 
+    })
+})
 
 socketServer.on('connection', async (socket) => {
     console.log("nuevo cliente conectado 2")
@@ -64,9 +110,9 @@ socketServer.on('connection', async (socket) => {
     })
     socket.on('message', async data => {
         console.log(data)
-        const addMessage = await messageService.addMessages(data);
+        const addMessage = await messageService.addMessages(data); 
         const messages = await messageService.getMessages(); 
-        socket.emit('messageLogs', messages);
+        socket.emit('messageLogs', messages); 
     })
 });
 

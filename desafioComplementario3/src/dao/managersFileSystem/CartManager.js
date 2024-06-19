@@ -2,22 +2,21 @@ import fs from 'fs';
 import path from 'path';
 import __dirname from '../../../utils.js'
 import ProductManager from './ProductManager.js';
-import { log } from 'console';
 
 const productManager = new ProductManager()
 
 class CartManager {
 
     constructor(){
-        this.path = path.join(__dirname, './data/carts.json');
+        this.path = path.join(__dirname, './data/carts.json');  
         this.carts = []; 
-        this.productManager = productManager; 
+        this.productManager = productManager;
     }
     getAllCarts = async () => {
         try{
             const carts = await fs.promises.readFile(this.path,"utf-8")
             if (carts && carts.trim() !== "") {
-                this.carts = JSON.parse(carts); 
+                this.carts = JSON.parse(carts);
                 return this.carts;
             } else {
                 return [];
@@ -33,7 +32,7 @@ class CartManager {
             return carts.find(cart => cart._id === +idCart);
         } catch (error) {
             console.log('Carrito inexistente:',error.message);
-            return error.message
+            throw error;
         }
     }
     createCart = async () => {
@@ -45,13 +44,13 @@ class CartManager {
             if(this.carts.length === 0){
                 carrito._id = 1 
             }else{
-                carrito._id = Math.max(...this.carts.map(cart => cart._id)) + 1 
+                carrito._id = Math.max(...this.carts.map(cart => cart._id)) + 1
             }
             this.carts.push(carrito);
             await fs.promises.writeFile(this.path,JSON.stringify(this.carts,null,2)) 
             return carrito
         } catch (error) {
-            return error.message;
+            throw error;
         }
     }
     addProductToCart = async (cartId , productId) => {
@@ -59,15 +58,12 @@ class CartManager {
             const carts = await this.getAllCarts(); 
             const filterCart = carts.find(cart => cart._id === +cartId); 
             if (!filterCart) {
-                console.log('Carrito no encontrado');
-                return
+                throw new Error('Carrito no encontrado');
             }
-
             const product = await this.productManager.getProductById(productId);
             if (!product) {
-                log('Producto no encontrado');
-                return
-            }   
+                throw new Error('Producto no encontrado');
+            }
             const existingProductInCart = filterCart.products.find(item => item.productID === +productId); 
             if(existingProductInCart){
                 existingProductInCart.quantity += 1; 
@@ -76,8 +72,7 @@ class CartManager {
             }
             await fs.promises.writeFile(this.path,JSON.stringify(carts,null,2))
         } catch (error) {
-            console.log(error.message);
-            return
+            throw error;
         }
     }
     modifyQuantity = async (cid, pid, quantity) => {
@@ -92,9 +87,9 @@ class CartManager {
             return cart;
         } catch (error) {
             console.log('Error al agregar un producto al carrito:', error.message);
-            return
+            throw error;
         }
-    }
+    };
     insertArrayOfProducts = async (cid, arrayOfproducts) => {
         try {
             const cartPath = path.join(__dirname, 'carts', `${cid}.json`);
@@ -113,9 +108,9 @@ class CartManager {
             return cart;
         } catch (error) {
             console.log('Error al agregar un array de productos al carrito:', error.message);
-            return
+            throw error;
         }
-    }
+    };
     deleteProdInCart = async (cid, pid) => {
         try {
             const cartPath = path.join(__dirname, 'carts', `${cid}.json`);
@@ -124,7 +119,7 @@ class CartManager {
             await fs.promises.writeFile(cartPath, JSON.stringify(cart), 'utf-8');
         } catch (error) {
             console.log('Error al eliminar un producto del carrito:', error.message);
-            return;
+            throw error;
         }
     };
     deleteAllProductsInCart = async (cid) => {
@@ -136,8 +131,9 @@ class CartManager {
             return cart;
         } catch (error) {
             console.log('Error al eliminar todos los productos:', error.message);
-            return
+            throw error;
         }
-    }
+    };
 }
+
 export default CartManager;

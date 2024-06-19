@@ -1,5 +1,5 @@
 import  {Router}  from "express";
-import __dirname from "../utils/utils.js";
+import __dirname from "../../utils.js";
 import { 
 	getProducts, 
 	getProductsInRealTime, 
@@ -10,10 +10,14 @@ import {
 	loginView , 
 	registerView , 
 	profileView, 
-	purchaseView
+	resetPasswordView,
+	newPasswordView,
+	uploadDocumentView,
+	purchaseView,
+	usersAdminManager
 } from "../controllers/viewsController.js";
 import { applyPolicy,  privateAccess, redirectAdmin ,sessionExist ,publicAccess } from "../middlewares/authMiddleware.js";
-import { passportCall , passportCallForHome } from "../utils/utils.js";
+import { passportCall , passportCallForHome} from "../../utils.js";
 
 const router = Router();
 router.get('/home',passportCallForHome('jwt'), sessionExist , applyPolicy(['PUBLIC']), getProducts );
@@ -25,6 +29,10 @@ router.get("/chat",passportCall('jwt'),applyPolicy(['USER' , 'PREMIUM']), chatSt
 router.get('/', redirection);
 router.get('/login',passportCallForHome('jwt'), sessionExist , loginView);
 router.get('/register',passportCallForHome('jwt'), sessionExist , registerView);
+router.get('/resetpassword', resetPasswordView);
+router.get('/newpassword/:pid', newPasswordView);
+router.get('/api/users/:uid/documents', passportCall('jwt'),applyPolicy(['USER' , 'PREMIUM']), privateAccess, uploadDocumentView);
 router.get('/profile', passportCall('jwt'),applyPolicy(['USER' , 'PREMIUM']), privateAccess, profileView);
+router.get('/usersadminmanager', passportCall('jwt'),applyPolicy(['ADMIN']), privateAccess, usersAdminManager);
 
 export default router;

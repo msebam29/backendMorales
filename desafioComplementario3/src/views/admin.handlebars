@@ -1,8 +1,6 @@
 <div class="container py-5">
-    <!-- Título -->
     <h2 class="text-center mb-5">Panel de administración de usuarios</h2>
 
-    <!-- Barra de búsqueda y botón para eliminar usuarios inactivos -->
     <div class="d-flex justify-content-between mb-3">
         <input 
             class="form-control" 
@@ -19,7 +17,6 @@
         </button>
     </div>
 
-    <!-- Tabla de usuarios -->
     <table class="table table-striped">
         <thead>
             <tr>
@@ -40,14 +37,12 @@
                 <td>{{this.role}}</td>
                 <td>{{this.last_connection}}</td>
                 <td>
-                    <!-- Botón para editar el rol del usuario -->
                     <button 
                         class="btn btn-primary edit-role mr-2" 
                         data-id="{{this._id}}"
                     >
                         Editar rol
                     </button>
-                    <!-- Botón para eliminar el usuario -->
                     <button 
                         class="btn btn-danger delete-user" 
                         data-id="{{this._id}}"

@@ -40,7 +40,9 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
 userSchema.pre('find', function(){
     this.populate('cart.cartId');
 });
+
 export const userModel = mongoose.model(collection,userSchema)

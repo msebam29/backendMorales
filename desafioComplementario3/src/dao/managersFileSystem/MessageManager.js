@@ -28,12 +28,11 @@ class messageManager{
             const messages = await this.getMessages();
             message._id = await this.getNextId();
             messages.push(message);
-            await fs.promises.writeFile(this.path, JSON.stringify(messages, null , 2)); //writeFile(ruta y nombre del archivo , contenido)
+            await fs.promises.writeFile(this.path, JSON.stringify(messages, null , 2)); 
         }catch(error){
             console.error('No se pudo entregar el mensaje',error.message);
             return error;
         }
     }
 }
-
 export default messageManager;

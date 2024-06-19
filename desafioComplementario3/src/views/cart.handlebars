@@ -1,4 +1,3 @@
-<!-- 1 - Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,7 +22,6 @@
 </nav>
 
 
-<!-- 2 - Título -->
 <header class="container mt-3 text-center">
     <h2 class="text-primary"><i class="bi bi-cart-fill"></i> Carrito de Compras</h2>
     <p>Cart ID: <span id='cart-id'>{{cart._id}}</span></p>
@@ -33,8 +31,6 @@
     <h4 class="text-primary">Productos en el Carrito:</h4>
 </header>
 
-
-<!-- 3- tarjetas de productos -->
 <div class="container py-5">
     <div class="row mt-4">
         <div class="col-12">
@@ -104,8 +100,6 @@
 
 <style>
 
-        
-    /* Estilos generales */
     body {
         background: linear-gradient(45deg, #06c -52%, #000 81%, #a044e3 95%);
         color: white;
@@ -116,7 +110,6 @@
         min-height: 100vh;
     }
 
-    /* Barra de navegación */
     .navbar {
         padding: 1rem;
     }
@@ -145,9 +138,6 @@
         background-size: 100% 100%;
     }
 
-
-    /*Estilos para cartas de productos*/
-
     .card {
         background-color: rgba(255, 255, 255, 0.1);
         color: white;
@@ -157,7 +147,6 @@
         display: flex;
         flex-direction: row;
     }
-
 
     .card-img-container {
         width: 250px;
@@ -174,7 +163,6 @@
         object-fit: contain;
     }
 
-    /*Estilos para el monto total*/
     .total-container {
         border: 2px solid #8000ff;
         border-radius: 25px;
@@ -198,7 +186,6 @@
     }
 
     #quantityInput {
-
         border-collapse: collapse;
         -webkit-font-smoothing: antialiased;
         display: block;
@@ -220,11 +207,6 @@
         padding: 0;
         text-align: center;
     }
-
-
-    /*Estilo para botones*/
-    
-    /* botones en general*/
     .btn {
         border: none;
         border-radius: 50px;
@@ -234,8 +216,6 @@
         color: white;
         transform: scale(1.05);
     }
-
-    /* botones en Success*/
     .btn-outline-success {
         background-color: #0033ff;
         color: white;
@@ -245,19 +225,14 @@
         background-color: #28a745;
         color: white;
     }
-
-    /* botones en Secondary*/
     .btn-outline-secondary {
         background-color: transparent;
         color: #6c757d;
     }
-
     .btn-outline-secondary:hover {
         background-color: #6c757d;
         color: white;
     }
-
-    /* botones en danger*/
     .btn-outline-danger {
         background-color: transparent;
         color: #dc3545;
@@ -267,18 +242,12 @@
         background-color: #dc3545;
         color: white;
     }
-
-
-    /* Pie de pagina */
     footer {
         margin-top: auto;
     }
-
-    /* Adaptable (Responsivo) */
     @media screen and (max-width: 767px) {
         .navbar-brand {
             display: none;
         }
     }
-
 </style>

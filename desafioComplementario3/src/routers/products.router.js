@@ -4,16 +4,14 @@ import {
     getProductById, 
     addProduct, 
     updateProduct, 
-    deleteProduct,
-    mockProducts,
-    loggerTest
+    deleteProduct
 } from '../controllers/productController.js';
-import { passportCall } from '../utils/utils.js';
+import { addLogger } from '../utils/logger.js';
+import { passportCall } from '../../utils.js';
 import upload from '../middlewares/multerConfig.js'
 
 const router = Router()
-router.get('/mockingproducts', mockProducts)
-router.get('/loggerTest', loggerTest)
+router.use(addLogger);
 router.get('/' , getProductsQuery );
 router.get('/:pid' , getProductById );
 router.post('/' , upload.single('product'), passportCall('jwt'), addProduct );

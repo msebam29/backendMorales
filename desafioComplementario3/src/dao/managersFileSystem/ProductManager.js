@@ -3,6 +3,7 @@ import path from 'path';
 import __dirname from '../../../utils.js';
 
 class ProductManager{
+
     constructor(){
         this.path = path.join(__dirname,'./data/products.json');
         this.products = [];
@@ -116,7 +117,7 @@ class ProductManager{
         let newProductsList = currentProductsList.map(item => {
             if (item._id === pid) {
                 const updatedProduct = {
-                    _id: pid, 
+                    _id: pid,
                     title,
                     description,
                     price,
@@ -144,5 +145,4 @@ class ProductManager{
         return updatedProductsList;  
     }
 }
-
 export default ProductManager;

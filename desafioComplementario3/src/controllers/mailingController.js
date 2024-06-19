@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer"
-import { config } from "../config/config.js"
+import nodemailer from "nodemailer";
+import config from "../config/config.js";
 
 const transport = nodemailer.createTransport({
     service: 'gmail',
@@ -23,6 +23,4 @@ export const mailingController = async(req,res) =>{
         attachments:[]
     })
 }
-
-
 

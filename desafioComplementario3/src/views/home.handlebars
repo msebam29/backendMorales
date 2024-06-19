@@ -1,4 +1,3 @@
-<!-- 1 - Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +24,6 @@
     </div>
 </nav>
 
-<!-- 2 - Título -->
 <header class="container mt-3 text-center">
     <h1>Bienvenido a LA-Store!</h1>
 </header>
@@ -34,10 +32,8 @@
     <h3>Encuentra tu producto:</h3>
 </header>
 
-<!-- 3 - Cuadrilla de productos y filtros -->
 <section class="container mt-3">
     <div class="row">
-        <!-- 4 - Sección para aplicar filtros -->
         <div class="col-md-3">
             <div class="filter p-4 mb-4 h-100" id="productForm">
                 <h4 class="mb-3 text-center">Filtros:</h4>
@@ -63,7 +59,6 @@
             </div>
         </div>
 
-        <!-- Cuadrilla de productos -->
         <div class="col-md-9">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
                 {{#each products.docs}}
@@ -92,7 +87,6 @@
     </div>
 </section>
 
-<!-- 5 - Número de página -->
 <section class="container mt-3">
     <nav aria-label="Navegación de página">
         <ul class="pagination justify-content-center">
@@ -121,7 +115,6 @@
     </nav>
 </section>
 
-<!-- 6 - Pie de página -->
 <footer class="footer mt-auto py-3 bg-dark text-light">
     <div class="container">
         <div class="row">
@@ -140,16 +133,10 @@
     </div>
 </footer>
 
-<!-- Scripts -->
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> 
 
-
-
-<!-- Estilos -->
 <style>
-    
-    /* Estilos generales */
     body {
         background: linear-gradient(45deg, #06c -52%, #000 81%, #a044e3 95%);
         color: white;
@@ -159,19 +146,13 @@
         flex-direction: column;
         min-height: 100vh;
     }
-
-
-
-    /* Barra de navegación */
     .navbar {
         padding: 1rem;
     }
-
     .nav-items {
         float: right;
         display: inline-block;
     }
-
     .navbar-collapse{
         align-items: center;
         justify-content: space-between;
@@ -191,15 +172,11 @@
         background-size: 100% 100%;
     }
 
-    /* Estilos del contenedor de las tarjetas de los productos */
-
     .container {
         max-width: auto;
         margin: auto;
         padding: 20px;
     }
-
-    /*Estilos para cartas de productos*/
 
     .card {
         background-color: rgba(255, 255, 255, 0.1);
@@ -236,14 +213,9 @@
         justify-content: space-between;
         font-size: 0.8rem;
     }
-
-    /*Estilo para filtros*/
-
     .filter {
 
     }
-
-    /* Estilos de los formularios */
     .form-control {
         background-color: rgba(255, 255, 255, 0.247);
         color: white;
@@ -273,10 +245,6 @@
         border-color: #0033ff;
         box-shadow: 0 0 0 0.2rem rgba(0, 51, 255, 0.25);
     }
-
-    /*Estilo para botones*/
-    
-    /* botones en general*/
     .btn {
         border: none;
         border-radius: 50px;
@@ -286,8 +254,6 @@
         color: white;
         transform: scale(1.05);
     }
-
-    /* botones en Success*/
     .btn-outline-success {
         background-color: #0033ff;
         color: white;
@@ -297,8 +263,6 @@
         background-color: #28a745;
         color: white;
     }
-
-    /* botones en Secondary*/
     .btn-outline-secondary {
         background-color: transparent;
         color: #6c757d;
@@ -309,7 +273,6 @@
         color: white;
     }
 
-    /* botones en danger*/
     .btn-outline-danger {
         background-color: transparent;
         color: #dc3545;
@@ -319,14 +282,9 @@
         background-color: #dc3545;
         color: white;
     }
-
-
-    /* Pie de pagina */
     footer {
         margin-top: auto;
     }
-
-    /* Adaptable (Responsivo) */
     @media screen and (max-width: 767px) {
         .navbar-brand {
             display: none;

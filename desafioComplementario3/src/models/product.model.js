@@ -43,5 +43,7 @@ const productSchema = new mongoose.Schema({
         default: 'admin' 
     }
 });
+
 productSchema.plugin(mongoosePaginate);
+
 export const productModel = mongoose.model(productCollection, productSchema);
